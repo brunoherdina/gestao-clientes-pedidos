@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Clientes;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ClientesController extends Controller
 {
@@ -41,7 +42,7 @@ class ClientesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+       
     }
 
     /**
@@ -52,7 +53,22 @@ class ClientesController extends Controller
      */
     public function show($id)
     {
-        //
+        try {
+            $mensagens_validacao = [
+                'id.required' => 'O ID do cliente é obrigatório',
+                'id.integer' => 'O ID informado é inválido',
+                'id.exists' => 'Cliente não localizado'
+            ];
+            $validator = Validator::make(['id' => $id], ['id' => 'required|integer|exists:clientes,id'], $mensagens_validacao);
+    
+            if($validator->fails()) {
+                return response()->json($validator->errors());
+            }
+    
+            return response()->json([Clientes::find($id)]);
+        } catch (\Exception $ex) {
+            return response()->json(['erro' => ['Ocorreu um erro inesperado ao buscar o cliente']], 500);
+        }
     }
 
     /**
