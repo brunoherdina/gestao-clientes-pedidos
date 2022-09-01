@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ClientesController;
+use App\Http\Controllers\Api\PedidosController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,3 +20,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::apiResource('clientes', ClientesController::class);
+Route::apiResource('pedidos', PedidosController::class);

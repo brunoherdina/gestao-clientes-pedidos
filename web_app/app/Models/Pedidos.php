@@ -28,5 +28,10 @@ class Pedidos extends Model
         self::EM_ATRASO => 'Em atraso',
         self::CANCELADO => 'Cancelado'
     ];
-    
+
+    public function cliente()
+    {
+        return $this->hasOne(Clientes::class, 'id', 'id_cliente');
+    }
+
 }

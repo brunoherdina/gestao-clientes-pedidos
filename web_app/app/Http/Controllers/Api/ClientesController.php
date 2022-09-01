@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Clientes;
-use App\Models\Pedidos;
 use App\Rules\Cep;
 use App\Rules\Cpf;
 use App\Rules\Telefone;
