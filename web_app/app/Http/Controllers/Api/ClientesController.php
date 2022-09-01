@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Clientes;
+use App\Models\Pedidos;
 use App\Rules\Cep;
 use App\Rules\Cpf;
 use App\Rules\Telefone;
@@ -33,7 +34,7 @@ class ClientesController extends Controller
             return response()->json($clientes);
         
         } catch (\Exception $ex) {
-            return response()->json(['erro' => ['Ocorreu um erro inesperado ao listar os clientes']], 500);
+            return response()->json(['error' => ['Ocorreu um erro inesperado ao listar os clientes']], 500);
         }
     }
 
@@ -96,7 +97,7 @@ class ClientesController extends Controller
             return response()->json(['message' => 'Cliente criado com sucesso', 'id' => $cliente->id], 201);
 
         } catch (\Exception $ex) {
-            return response()->json(['erro' => ['Ocorreu um erro inesperado ao cadastrar o cliente']], 500);
+            return response()->json(['error' => ['Ocorreu um erro inesperado ao cadastrar o cliente']], 500);
         }
      
     }
@@ -123,7 +124,7 @@ class ClientesController extends Controller
     
             return response()->json([Clientes::find($id)]);
         } catch (\Exception $ex) {
-            return response()->json(['erro' => ['Ocorreu um erro inesperado ao buscar o cliente']], 500);
+            return response()->json(['error' => ['Ocorreu um erro inesperado ao buscar o cliente']], 500);
         }
     }
 
@@ -195,7 +196,7 @@ class ClientesController extends Controller
             return response()->json(['message' => 'Cliente atualizado com sucesso']);
 
         } catch (\Exception $ex) {
-            return response()->json(['erro' => ['Ocorreu um erro inesperado ao cadastrar o cliente']], 500);
+            return response()->json(['error' => ['Ocorreu um erro inesperado ao cadastrar o cliente']], 500);
         }
     }
 
@@ -207,6 +208,27 @@ class ClientesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $mensagens_validacao = [
+                'id.required' => 'O ID do cliente é obrigatório',
+                'id.integer' => 'O ID informado é inválido'
+            ];
+            $validator = Validator::make(['id' => $id], ['id' => 'required|integer'], $mensagens_validacao);
+    
+            if($validator->fails()) {
+                return response()->json($validator->errors());
+            }
+
+            $cliente = Clientes::find($id);
+            if($cliente) {
+                $cliente->delete();
+                return response()->json(['message' => 'Cliente excluído com sucesso']);
+            }
+
+            return response()->json(['message' => 'Cliente não existe ou já foi excluído']);
+
+        } catch (\Exception $ex) {
+            return response()->json(['error' => ['Ocorreu um erro inesperado ao buscar o cliente']], 500);
+        }
     }
 }
