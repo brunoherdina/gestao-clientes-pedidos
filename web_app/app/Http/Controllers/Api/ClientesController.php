@@ -136,7 +136,67 @@ class ClientesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+
+            $request_array = $request->all();
+            $request_array['id'] = $id;
+
+            $campos_validacao = [
+                'id' => 'required|integer|exists:clientes,id',
+                'nome' => 'required|string|max:255',
+                'cpf' => new Cpf(),
+                'logradouro' => 'required|string|max:255',
+                'cidade' => 'required|string|max:255',
+                'uf' => 'required|string|max:255',
+                'cep' => new Cep(),
+                'numero' => 'required|integer',
+                'complemento' => 'nullable|string|max:255',
+                'telefone' => new Telefone()
+            ];
+
+            $mensagens_validacao = [
+                'id.required' => 'O ID do cliente é obrigatório',
+                'id.integer' => 'O ID informado é inválido',
+                'id.exists' => 'Cliente não localizado',
+                'nome.required' => 'O nome é obrigatório',
+                'nome.string' => 'O nome deve ser um texto',
+                'nome.max' => 'O nome deve conter no máximo 255 caracteres',
+                'logradouro.required' => 'O logradouro é obrigatório',
+                'logradouro.string' => 'O logradouro deve ser um texto',
+                'logradouro.max' => 'O logradouro deve conter no máximo 255 caracteres',
+                'cidade.required' => 'A cidade é obrigatória',
+                'cidade.string' => 'A cidade deve ser um texto',
+                'cidade.max' => 'A cidade deve conter no máximo 255 caracteres',
+                'uf.required' => 'A UF é obrigatória',
+                'uf.string' => 'A UF deve ser um texto',
+                'uf.max' => 'A UF deve conter no máximo 2 caracteres',
+                'numero.required' => 'O número é obrigatório',
+                'numero.integer' => 'O número deve ser preenchido com um valor numérico',
+                'complemento.string' => 'O complemento deve ser um texto',
+                'complemento.max' => 'O complemento deve conter no máximo 255 caracteres',
+            ];
+
+            $validator = Validator::make($request_array, $campos_validacao, $mensagens_validacao);
+    
+            if($validator->fails()) {
+                return response()->json($validator->errors());
+            }
+
+            unset($request_array['id']);
+
+            $request_array['cpf'] = preg_replace( '/[^0-9]/is', '', $request_array['cpf'] );
+            $request_array['cep'] = preg_replace( '/[^0-9]/is', '', $request_array['cep'] );
+            $request_array['telefone'] = preg_replace( '/[^0-9]/is', '', $request_array['telefone'] );
+
+            $cliente = Clientes::find($id);
+            $cliente->fill($request_array);
+            $cliente->save();
+
+            return response()->json(['message' => 'Cliente atualizado com sucesso']);
+
+        } catch (\Exception $ex) {
+            return response()->json(['erro' => ['Ocorreu um erro inesperado ao cadastrar o cliente']], 500);
+        }
     }
 
     /**
