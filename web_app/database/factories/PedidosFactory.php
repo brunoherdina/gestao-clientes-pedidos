@@ -20,7 +20,7 @@ class PedidosFactory extends Factory
         $max = 900;
         return [
             'id_cliente' => Clientes::inRandomOrder()->first()->id,
-            'valor_total' => rand ($min * 0, $max * 10) / 10,
+            'valor_frete' => rand ($min * 0, $max * 10) / 10,
             'data_entrega_prevista' => Carbon::now()->addDays(random_int(2, 10))->format('Y-m-d'),
         ];
     }

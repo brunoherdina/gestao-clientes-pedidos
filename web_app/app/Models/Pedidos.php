@@ -11,7 +11,7 @@ class Pedidos extends Model
     protected $table = 'pedidos';
     protected $fillable = [
         'id_cliente',
-        'valor_total',
+        'valor_frete',
         'data_entrega_prevista',
         'data_entrega',
         'status'
