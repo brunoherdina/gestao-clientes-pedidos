@@ -170,7 +170,7 @@
         $(document).ready(() => {
 
             $('.datepicker').datepicker({
-                format: 'yyyy-mm-dd',
+                format: 'dd/mm/yyyy',
             });
 
             $('.limpar_filtro').on('click', () => {

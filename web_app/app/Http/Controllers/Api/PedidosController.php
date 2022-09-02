@@ -217,10 +217,12 @@ class PedidosController extends Controller
         }
 
         if($data_criacao_inicial) {
+            $data_criacao_inicial = Carbon::createFromFormat('d/m/Y', $data_criacao_inicial)->format('Y-m-d');
             $pedidos->whereDate('created_at', '>=', $data_criacao_inicial);
         }
 
         if($data_criacao_final) {
+            $data_criacao_final = Carbon::createFromFormat('d/m/Y', $data_criacao_final)->format('Y-m-d');
             $pedidos->whereDate('created_at', '<=', $data_criacao_final);
         }
 
