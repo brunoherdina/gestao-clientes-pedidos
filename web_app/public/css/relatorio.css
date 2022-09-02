@@ -1,0 +1,41 @@
+body {
+    margin-left: 5px !important;
+    margin-right: 5px !important;
+}
+.linha-logo {
+    background-color: #FF811B;
+    height: 6rem;
+}
+.brudam-logo {
+    max-height: 6rem;
+}
+.nome_empresa {
+    color: #FFF;
+    font-size: 50px;
+}
+.card {
+    margin-top: 1.5rem;
+}
+label {
+    margin-bottom: 5px;
+    font-size: 18px;
+}
+
+.datepicker td, .datepicker th{font-size: 12px !important; font-weight: 500 !important; width: 36px !important; height: 30px !important;}
+.datepicker table tr td.active, .datepicker table tr td.active:hover,
+.datepicker table tr td.active.disabled, .datepicker table tr td.active.disabled:hover{background: #5E5873 !important}
+.datepicker .datepicker-switch{font-weight: 700 !important}
+.datepicker table tr td.old, .datepicker table tr td.new{color:#ccc !important;}
+
+.botoes {
+    height: 50px;
+}
+
+.botoes:last-child {
+    margin-left: 5px;
+}
+
+.table_head {
+    text-align: center;
+    vertical-align: middle;
+}
