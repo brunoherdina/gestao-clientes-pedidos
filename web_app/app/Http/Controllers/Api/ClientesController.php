@@ -114,7 +114,7 @@ class ClientesController extends Controller
                 'id.integer' => 'O ID informado é inválido',
                 'id.exists' => 'Cliente não localizado'
             ];
-            $validator = Validator::make(['id' => $id], ['id' => 'required|integer|exists:clientes,id'], $mensagens_validacao);
+            $validator = Validator::make(['id' => $id], ['id' => 'required|integer|exists:clientes,id,deleted_at,NULL'], $mensagens_validacao);
     
             if($validator->fails()) {
                 return response()->json($validator->errors(), 400);
