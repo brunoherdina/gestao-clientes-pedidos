@@ -98,7 +98,6 @@ class ClientesController extends Controller
         } catch (\Exception $ex) {
             return response()->json(['error' => ['Ocorreu um erro inesperado ao cadastrar o cliente']], 500);
         }
-     
     }
 
     /**
