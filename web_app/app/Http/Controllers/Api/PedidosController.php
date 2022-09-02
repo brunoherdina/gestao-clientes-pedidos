@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Pedidos;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -128,7 +129,7 @@ class PedidosController extends Controller
     public function show($id)
     {
         try {
-            
+
             $mensagens_validacao = [
                 'id.required' => 'O ID do pedido é obrigatório',
                 'id.integer' => 'O ID informado é inválido',
@@ -156,7 +157,60 @@ class PedidosController extends Controller
      */
     public function update(Request $request, $id)
     {
+        try {
+            $request_array = $request->all();
+            $request_array['id'] = $id;
 
+            $campos_validacao = [
+                'id' => 'required|integer|exists:pedidos,id',
+                'id_cliente' => 'required|integer|exists:clientes,id',
+                'valor_frete' => 'required|numeric',
+                'data_entrega_prevista' => 'nullable|date_format:Y-m-d',
+                'data_entrega' => 'nullable|date_format:Y-m-d',
+                'status' => ['nullable', Rule::in(array_keys(Pedidos::STATUS_PEDIDOS))]
+            ];
+
+            $mensagens_validacao = [
+                'id.required' => 'O ID do pedido é obrigatório',
+                'id.integer' => 'O ID do pedido informado é inválido',
+                'id.exists' => 'Nenhum pedido localizado para o ID informado',
+                'id_cliente.required' => 'O id_cliente é obrigatório',
+                'id_cliente.integer' => 'O id_cliente informado é inválido',
+                'id_cliente.exists' => 'Nenhum cliente localizado para o id_cliente informado',
+                'valor_frete.required' => 'O valor do frete é obrigatório',
+                'valor_frete.numeric' => 'O valor do frete deve ser um número',
+                'data_entrega_prevista.date_format' => 'A data de entrega prevista deve ser no formato Y-m-d',
+                'data_entrega.date_format' => 'A data de entrega deve ser no formato Y-m-d',
+                'status.in' => 'O status informado é inválido'
+            ];
+
+            $validator = Validator::make($request_array, $campos_validacao, $mensagens_validacao);
+    
+            if($validator->fails()) {
+                return response()->json($validator->errors());
+            }
+
+            unset($request_array['id']);
+            $novo_status = $request_array['status'] ?? null;
+            $pedido = Pedidos::find($id);
+
+            // Caso não seja enviada a data de entrega mas o status tenha mudado de PENDENTE para ENTREGUE define a data de entrega como sendo o dia atual
+            if($novo_status == Pedidos::ENTREGUE) {
+                $data_entrega = $request_array['data_entrega'] ?? null;
+                if($pedido->status == Pedidos::PENDENTE && !$data_entrega) {
+                    $data_entrega = Carbon::now()->format('Y-m-d');
+                    $request_array['data_entrega'] = $data_entrega;
+                }
+            }
+
+            $pedido->fill($request_array);
+            $pedido->save();
+
+            return response()->json(['message' => 'Pedido atualizado com sucesso'], 200);
+
+        } catch (\Exception $ex) {
+            return response()->json(['error' => ['Ocorreu um erro inesperado ao atualizar o pedido']], 500);
+        }
     }
 
     /**

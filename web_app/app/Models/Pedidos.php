@@ -17,6 +17,8 @@ class Pedidos extends Model
         'status'
     ];
 
+    protected $appends = ['status_descricao'];
+
     const PENDENTE = 0;
     const ENTREGUE = 1;
     const EM_ATRASO = 2;
@@ -34,4 +36,8 @@ class Pedidos extends Model
         return $this->hasOne(Clientes::class, 'id', 'id_cliente');
     }
 
+    public function getStatusDescricaoAttribute()
+    {
+        return self::STATUS_PEDIDOS[$this->status] ?? null;
+    }
 }
