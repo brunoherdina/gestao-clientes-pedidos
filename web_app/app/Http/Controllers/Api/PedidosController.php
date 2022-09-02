@@ -224,7 +224,7 @@ class PedidosController extends Controller
             $pedidos->whereDate('created_at', '<=', $data_criacao_final);
         }
 
-        if($status) {
+        if($status !== null) {
             $pedidos->where('status', $status);
         }
 
