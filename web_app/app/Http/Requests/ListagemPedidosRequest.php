@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use App\Models\Pedidos;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\Rule;
 
 class ListagemPedidosRequest extends FormRequest
@@ -45,10 +44,15 @@ class ListagemPedidosRequest extends FormRequest
             'id_cliente.integer' => 'O id_cliente informado é inválido',
             'id_cliente.exists' => 'Nenhum cliente localizado para o id_cliente informado',
             'data_criacao_inicial.date_format' => 'A data de criação inicial deve ser no formato Y-m-d',
-            'data_criacao_inicial.before_or_equal' => 'A data de criação inicial deve ser menor ou igual ao periodo final',
+            'data_criacao_inicial.before_or_equal' => 'A data de criação inicial deve ser menor ou igual a data de criação final',
             'data_criacao_final.date_format' => 'A data de criação final deve ser no formato Y-m-d',
-            'data_criacao_final.after_or_equal' => 'A data de criação final deve ser maior ou igual ao periodo inicial',
+            'data_criacao_final.after_or_equal' => 'A data de criação final deve ser maior ou igual a data de criação inicial',
             'status.in' => 'O status informado é inválido'
         ];
+    }
+
+    public function response(array $errors)
+    {
+        return response()->json(['teste'], 400);
     }
 }

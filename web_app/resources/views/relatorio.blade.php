@@ -15,6 +15,8 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         {{-- Estilo da página --}}
         <link href="{{asset('css/relatorio.css')}}" rel="stylesheet">
+        {{-- Toast --}}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
         {{-- JAVASCRIPT --}}
 
@@ -24,6 +26,8 @@
         <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
         {{-- Datepicker --}}
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        {{-- Toast --}}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         
     </head>
     <body class="antialiased">
@@ -146,6 +150,19 @@
                     let pagina = url.split("page=")[1];
                     buscarDados(parseInt(pagina));
                 });
+            },
+            error: function(response) {
+                if (response.status == 422) {
+                   var errors = Object.entries(JSON.parse(response.responseText));
+                    errors.forEach(campo => {
+                        if(campo[0] == 'errors') {
+                            let mensagens = Object.entries(campo[1]);
+                            mensagens.forEach(mensagem => {
+                                toastr.error(mensagem[1]);
+                            });
+                        }
+                    });
+               }
             }
         });
     }
