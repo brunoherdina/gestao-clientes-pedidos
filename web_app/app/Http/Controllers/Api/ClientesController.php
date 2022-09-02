@@ -83,7 +83,7 @@ class ClientesController extends Controller
             $validator = Validator::make($request_array, $campos_validacao, $mensagens_validacao);
     
             if($validator->fails()) {
-                return response()->json($validator->errors());
+                return response()->json($validator->errors(), 400);
             }
 
             $request_array['cpf'] = preg_replace( '/[^0-9]/is', '', $request_array['cpf'] );
@@ -117,7 +117,7 @@ class ClientesController extends Controller
             $validator = Validator::make(['id' => $id], ['id' => 'required|integer|exists:clientes,id'], $mensagens_validacao);
     
             if($validator->fails()) {
-                return response()->json($validator->errors());
+                return response()->json($validator->errors(), 400);
             }
     
             return response()->json([Clientes::find($id)]);
@@ -178,7 +178,7 @@ class ClientesController extends Controller
             $validator = Validator::make($request_array, $campos_validacao, $mensagens_validacao);
     
             if($validator->fails()) {
-                return response()->json($validator->errors());
+                return response()->json($validator->errors(), 400);
             }
 
             unset($request_array['id']);
@@ -214,7 +214,7 @@ class ClientesController extends Controller
             $validator = Validator::make(['id' => $id], ['id' => 'required|integer'], $mensagens_validacao);
     
             if($validator->fails()) {
-                return response()->json($validator->errors());
+                return response()->json($validator->errors(), 400);
             }
 
             $cliente = Clientes::find($id);
