@@ -194,7 +194,7 @@ class ClientesController extends Controller
             return response()->json(['message' => 'Cliente atualizado com sucesso']);
 
         } catch (\Exception $ex) {
-            return response()->json(['error' => ['Ocorreu um erro inesperado ao cadastrar o cliente']], 500);
+            return response()->json(['error' => ['Ocorreu um erro inesperado ao atualizar o cliente']], 500);
         }
     }
 
@@ -226,7 +226,7 @@ class ClientesController extends Controller
             return response()->json(['message' => 'Cliente não existe ou já foi excluído']);
 
         } catch (\Exception $ex) {
-            return response()->json(['error' => ['Ocorreu um erro inesperado ao buscar o cliente']], 500);
+            return response()->json(['error' => ['Ocorreu um erro inesperado ao excluir o cliente']], 500);
         }
     }
 }

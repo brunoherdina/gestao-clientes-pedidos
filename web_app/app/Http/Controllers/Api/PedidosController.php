@@ -221,6 +221,27 @@ class PedidosController extends Controller
      */
     public function destroy($id)
     {
-      
+        try {
+            $mensagens_validacao = [
+                'id.required' => 'O ID do pedido é obrigatório',
+                'id.integer' => 'O ID informado é inválido'
+            ];
+            $validator = Validator::make(['id' => $id], ['id' => 'required|integer'], $mensagens_validacao);
+    
+            if($validator->fails()) {
+                return response()->json($validator->errors());
+            }
+
+            $pedido = Pedidos::find($id);
+            if($pedido) {
+                $pedido->delete();
+                return response()->json(['message' => 'Pedido excluído com sucesso']);
+            }
+
+            return response()->json(['message' => 'Pedido não existe ou já foi excluído']);
+
+        } catch (\Exception $ex) {
+            return response()->json(['error' => ['Ocorreu um erro inesperado ao excluir o pedido']], 500);
+        }
     }
 }
