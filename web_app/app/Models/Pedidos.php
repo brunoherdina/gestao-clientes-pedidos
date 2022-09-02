@@ -39,7 +39,7 @@ class Pedidos extends Model
 
     public function cliente()
     {
-        return $this->hasOne(Clientes::class, 'id', 'id_cliente');
+        return $this->hasOne(Clientes::class, 'id', 'id_cliente')->withTrashed();
     }
 
     public function getStatusDescricaoAttribute()
