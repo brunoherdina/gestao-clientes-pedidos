@@ -127,7 +127,24 @@ class PedidosController extends Controller
      */
     public function show($id)
     {
-       
+        try {
+            
+            $mensagens_validacao = [
+                'id.required' => 'O ID do pedido é obrigatório',
+                'id.integer' => 'O ID informado é inválido',
+                'id.exists' => 'Pedido não localizado'
+            ];
+            $validator = Validator::make(['id' => $id], ['id' => 'required|integer|exists:pedidos,id'], $mensagens_validacao);
+
+            if($validator->fails()) {
+                return response()->json($validator->errors());
+            }
+
+            return response()->json([Pedidos::find($id)]);
+
+        } catch (\Exception $ex) {
+            return response()->json(['error' => ['Ocorreu um erro inesperado ao buscar o pedido']], 500);
+        }
     }
 
     /**
